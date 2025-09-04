@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Publica tu anuncion de adopcion!!</title>
+        <link rel="stylesheet" href="/css/smth.css">
+    </head>
+
+    <body>
+        <div class="main-container">
+            <div class="botones">
+                <button id="portada">Portada</button>
+                <button id="see-posts" hidden>Ver Adopciones</button>
+                <button id="send-post" hidden>Mandar Adopción</button>
+                <button id="see-stats" hidden>Observar Estadísticas</button>
+            </div>
+
+            <div id="confirm-modal" class="modal" hidden>
+                <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+                    <h3 id="confirm-title">¿Está seguro que desea agregar este aviso de adopción?</h3>
+                    <div style="margin-top:12px;">
+                        <button id="confirm-yes" type="button">Sí, estoy seguro</button>
+                        <button id="confirm-no" type="button">No, volver al formulario</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sent-box" class="modal" hidden>
+                <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sent-title">
+                    <h3 id="sent-title">Hemos recibido la información de adopción, ¡muchas gracias y suerte!</h3>
+                    <div style="margin-top:12px;">
+                        <button id="portada2">Volver a la portada</button>
+                    </div>
+                </div>
+            </div>
+            <div id="val-box" hidden>
+                <h2 id="val-msg">Hay problemas con tu formulario</h2>
+                <ul id="val-list"></ul>
+            </div>
+            <h2>¿Donde?</h2>
+            <form name="userForm1" method="post" enctype="multipart/form-data" novalidate>
+
+                <label for="select-region">Región</label>
+                <select name="select-region" id="select-region" required>
+                    <option value="">Seleccione una Región</option>
+                </select>
+
+                <label for="select-comuna">Comuna</label>
+                <select name="select-comuna" id="select-comuna" required>
+                    <option value="">Seleccione una Comuna</option>
+                </select>
+
+                <label for="text-sector">Sector</label>
+                <input type="text" name="text-sector" id="text-sector"
+                minlength="0" maxlength="100">
+
+            </form>
+            <h2>Contacto</h2>
+            <form name="userForm2" method="post" enctype="multipart/form-data" novalidate>
+
+                <label for="name-user">Nombre</label>
+                <input type="text" name="name-user" id="name-user"
+                minlength="3" maxlength="200" required>
+
+                <label for="email-user">Email</label>
+                <input type="email" name="email-user" id="email-user" 
+                minlength="10" maxlength="100" required>
+
+                <label for="tel-user">Numero de celular</label>
+                <input type="tel" name="tel-user" id="tel-user" 
+                maxlength="13" required>
+
+                <label for="user-connection">Contactar por</label>
+                <select name="user-connection" id="user-connection" required>
+                    <option value="">Seleccione</option>
+                </select>
+
+                <label for="other-red" style="display: none;">ID o URL</label>
+                <textarea name="other-red" id="other-red" rows="4" cols="50" style="display: none;"></textarea>
+
+            </form>
+            <h2>¿Que mascota ofrece en adopcion?</h2>
+            <form name="userForm3" method="post" enctype="multipart/form-data" novalidate>
+
+                <label for="animal-type">Tipo</label>
+                <select name="animal-type" id="animal-type" required>
+                    <option value="">Seleccione</option>
+                </select>
+
+                <label for="animal-quantity">Cantidad</label>
+                <input type="number" name="animal-quantity" id="animal-quantity" required>
+
+                <label for="animal-age">Edad</label>
+                <input type="number" name="animal-age" id="animal-age" required>
+
+                <label for="age-type">Unidad de medidad edad</label>
+                <select name="age-type" id="age-type" required>
+                    <option value="">Seleccione</option>
+                </select>
+
+                <label for="delibery-date">Fecha disponible para entrega</label>
+                <input type="datetime-local" name="delibery-date" id="delibery-date"
+                required>
+
+                <label for="animal-description">Descripcion</label>
+                <input type="text" name="animal-description" id="animal-description"
+                maxlength="200" required>
+
+                <div id="photo-container">
+                    <label for="animal-picture">Fotos (máx. 5)</label>
+                    <input type="file" name="animal-picture" id="animal-picture" accept="image/*" required>
+                </div>
+
+                <button id="add-photo" type="button">Agregar otra foto</button>
+
+                <button id="send-button" type="button">Enviar Aviso</button>
+            </form>
+        </div>
+        <script src="/js/select.js"></script>
+        <script src="/js/validationform.js"></script>
+        <script src="/js/buttons.js"></script>
+    </body>
+</html>

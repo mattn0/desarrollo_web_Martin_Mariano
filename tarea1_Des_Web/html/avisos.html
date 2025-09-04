@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Listado de Adopciones</title>
+        <link rel="stylesheet" href="/css/smth.css">
+    </head>
+    <body>
+        <button id="portada">Portada</button>
+        <h1>Listado</h1>
+        <table id="table2">
+            <thead>
+                <tr>
+                    <th>Fecha de publicacion</th><th>Fecha Entrega</th><th>Comuna</th>
+                    <th>Sector</th><th>Cantidad, Tipo y Edad</th>
+                    <th>Nombre Contacto</th><th>Total fotos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="mostrarDetalle(1)">
+                    <td>2025-08-18</td><td>2025-08-20</td><td>Santiago</td>
+                    <td>Beauchef</td><td>1, Gato, 2 meses</td><td>Maria</td><td>1</td>
+                </tr>
+                <tr onclick="mostrarDetalle(2)">
+                    <td>2025-06-18</td><td>2025-06-20</td><td>Ñuñoa</td>
+                    <td>Plaza Ñuñoa</td><td>3, Perro, 2 meses</td><td>Carlos</td><td>2</td>
+                </tr>
+                <tr onclick="mostrarDetalle(3)">
+                    <td>2025-03-18</td><td>2025-04-20</td><td>Valparaiso</td>
+                    <td>Cerro Alegre</td><td>2, Gato, 1 año</td><td>Ana</td><td>2</td>
+                </tr>
+                <tr onclick="mostrarDetalle(4)">
+                    <td>2025-02-18</td><td>2025-02-20</td><td>Concepcion</td>
+                    <td>Centro</td><td>1, Perro, 6 meses</td><td>Javier</td><td></td>
+                </tr>
+                <tr onclick="mostrarDetalle(5)">
+                    <td>2025-01-18</td><td>2025-01-20</td><td>La Serena</td>
+                    <td>Av. del Mar</td><td>2, Gato, 3 meses</td><td>Sofía</td><td>2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="detalle" hidden>
+            <h2>Detalle Aviso</h2>
+            <p><b>Nombre contacto:</b> <span id="detalle-nombre"></span></p>
+            <p><b>Email:</b> <span id="detalle-email"></span></p>
+            <p><b>Comuna:</b> <span id="detalle-comuna"></span></p>
+            <p><b>Sector:</b> <span id="detalle-sector"></span></p>
+            <p><b>Mascota:</b> <span id="detalle-mascota"></span></p>
+            <div class="fotos" id="detalle-fotos"></div>
+            <br>
+            
+            <button onclick="volverList()">Volver</button>
+
+            <div class="botones">
+                <button id="portada2">Portada</button>
+                <button id="see-posts" hidden>Portada</button>
+                <button id="send-post" hidden>Portada</button>
+                <button id="see-stats" hidden>Portada</button>
+            </div>
+        </div>
+
+        <div id="see-photo" hidden>
+            <div class="modal-content">
+                <img id="bigger-photo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="bigger-photo">
+                <button onclick="closephoto()">Cerrar</button>
+            </div>
+        </div>
+        <script src="/js/avisos.js"></script>
+        <script src="/js/buttons.js"></script>
+    </body>
+</html>
