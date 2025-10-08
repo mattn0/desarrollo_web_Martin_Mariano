@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Detalle del Aviso{% endblock %}
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/smth.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Detalle del Aviso</h1>
+
+<p>Nombre contacto: {{ aviso.nombre }}</p>
+<p>Email: {{ aviso.email }}</p>
+<p>Celular: {{ aviso.celular }}</p>
+<p>Comuna: {{ aviso.comuna.nombre }}</p>
+<p>Sector: {{ aviso.sector }}</p>
+<p>Mascota: {{ aviso.cantidad }} {{ aviso.tipo }} ({{ aviso.edad }} {{ 'Años' if aviso.unidad_medida == 'a' else 'Meses' }})</p>
+<p>Descripción: {{ aviso.descripcion }}</p>
+
+<h2>Fotos</h2>
+{% if fotos and fotos|length %}
+  {% for foto in fotos %}
+    <img src="{{ url_for('uploaded_file', filename=foto.nombre_archivo) }}" width="100" alt="Foto de la mascota">
+  {% endfor %}
+{% else %}
+  <p>Sin fotos.</p>
+{% endif %}
+
+<h2>Contactar por</h2>
+{% if contactos and contactos|length %}
+  {% for contacto in contactos %}
+    <p>{{ contacto.nombre }}: {{ contacto.identificador }}</p>
+  {% endfor %}
+{% else %}
+  <p>Sin contactos.</p>
+{% endif %}
+
+<a href="{{ url_for('avisos', page=page or 1) }}">← Volver al listado</a>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/avisos.js') }}"></script>
+{% endblock %}

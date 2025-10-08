@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Adopción de Mascotas{% endblock %}</title>
+  {% block css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/smth.css') }}">
+  {% endblock %}
+</head>
+<body>
+  <nav class="nav">
+    <a href="{{ url_for('portada') }}">Portada</a> |
+    <a href="{{ url_for('anuncio') }}">Agregar Aviso</a> |
+    <a href="{{ url_for('avisos') }}">Listado</a> |
+    <a href="{{ url_for('estadisticas') }}">Estadísticas</a>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="main-container">
+        {% for category, message in messages %}
+          <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="main-container">
+    {% block content %}{% endblock %}
+  </div>
+    {% block javascript %}
+    <script src="{{ url_for('static', filename='js/avisos.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/buttons.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validationform.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

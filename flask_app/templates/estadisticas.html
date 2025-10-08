@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Estadísticas{% endblock %}
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/smth.css') }}">
+{% endblock %}
+{% block content %}
+    <h1>Estadísticas</h1>
+    <p>Pendiente</p>
+
+    <h2>Avisos por día</h2>
+    <div id="chart-day"></div>
+
+    <h2>Avisos por tipo</h2>
+    <div id="chart-type"></div>
+
+    <h2>Avisos por mes</h2>
+    <div id="chart-month"></div>
+{% endblock %}
+{% block javascript %}
+    {{ super() }}
+    <!-- nada ono? -->
+{% endblock %}

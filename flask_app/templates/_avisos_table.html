@@ -1,0 +1,31 @@
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha publicación</th>
+        <th>Fecha Entrega</th>
+        <th>Comuna</th>
+        <th>Sector</th>
+        <th>Cantidad, Tipo y Edad</th>
+        <th>Nombre Contacto</th>
+        <th>Total fotos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aviso in avisos %}
+      <tr>
+        <td>{{ aviso.fecha_ingreso }}</td>
+        <td>{{ aviso.fecha_entrega }}</td>
+        <td>{{ aviso.comuna.nombre }}</td>
+        <td>{{ aviso.sector }}</td>
+        <td>{{ aviso.cantidad }}, {{ aviso.tipo }}, {{ aviso.edad }} {{ aviso.unidad_medida }}</td>
+        <td>{{ aviso.nombre }}</td>
+        <td>{{ aviso.fotos|length }}</td>
+        <td>
+          <a href="{{ url_for('detalle_aviso', aviso_id=aviso.id, page=page) }}">Ver Detalle</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
