@@ -1,0 +1,16 @@
+
+
+{
+  "get_last_avisos": "SELECT * FROM aviso_adopcion ORDER BY fecha_ingreso DESC LIMIT %s;",
+  "insert_aviso": "INSERT INTO aviso_adopcion (fecha_ingreso, comuna_id, sector, nombre, email, celular, tipo, cantidad, edad, unidad_medida, fecha_entrega, descripcion) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
+  "insert_foto": "INSERT INTO foto (ruta_archivo, nombre_archivo, aviso_id) VALUES (%s,%s,%s);",
+  "insert_contacto": "INSERT INTO contactar_por (nombre, identificador, aviso_id) VALUES (%s,%s,%s);",
+  "get_avisos_paginated": "SELECT * FROM aviso_adopcion ORDER BY fecha_ingreso DESC LIMIT %s OFFSET %s;",
+  "get_aviso_by_id": "SELECT * FROM aviso_adopcion WHERE id = %s;",
+  "get_fotos_by_aviso": "SELECT * FROM foto WHERE aviso_id = %s;",
+  "get_contactos_by_aviso": "SELECT * FROM contactar_por WHERE aviso_id = %s;",
+  "get_regiones": "SELECT * FROM region ORDER BY nombre;",
+  "get_comunas_by_region": "SELECT * FROM comuna WHERE region_id = %s ORDER BY nombre;"
+}
+
+
