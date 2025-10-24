@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Agregar Aviso{% endblock %}
+
+{% block css %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+  {% if errors %}
+    <div class="error-container">
+      {% for err in errors %}
+        <p>{{ err }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h1>Publica tu aviso de adopción</h1>
+
+  <form id="form-anuncio" action="{{ url_for('anuncio') }}" method="post" enctype="multipart/form-data">
+    <!-- ¿Dónde? -->
+    <div class="section-title">¿Dónde?</div>
+
+    <!-- IDs se mantienen para AJAX -->
+    <select name="region" id="select-region">
+      <option value="">Seleccione una Región</option>
+      {% for region in regiones %}
+        <option value="{{ region.id }}"
+          {% if request.form.get('region') == region.id|string or request.form.get('select-region') == region.id|string %}selected{% endif %}>
+          {{ region.nombre }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="commune" id="select-comuna">
+      <option value="">Seleccione una Comuna</option>
+      {% if request.form.get('commune') %}
+        <option value="{{ request.form['commune'] }}" selected>{{ request.form['commune'] }}</option>
+      {% elif request.form.get('select-comuna') %}
+        <option value="{{ request.form['select-comuna'] }}" selected>{{ request.form['select-comuna'] }}</option>
+      {% endif %}
+    </select>
+
+    <!-- name=sector para backend; mismo id -->
+    <input type="text" name="sector" id="text-sector" placeholder="Sector"
+           value="{{ request.form.get('sector', request.form.get('text-sector','')) }}"/>
+
+    <div class="section-title">Contacto</div>
+
+    <input type="text"   name="name-user"  id="name-user"  placeholder="Nombre" value="{{ request.form.get('name-user','') }}"/>
+    <input type="email"  name="email-user" id="email-user" placeholder="Email"   value="{{ request.form.get('email-user','') }}"/>
+    <input type="tel"    name="tel-user"   id="tel-user"   placeholder="Celular" value="{{ request.form.get('tel-user','') }}"/>
+
+    <!-- Contenedor dinámico de contactos -->
+    <div id="contact-container">
+
+    </div>
+
+    <!-- Template para clonar contactos sin duplicar IDs -->
+    <template id="tpl-contact">
+      <div class="contact-row">
+        <select name="contact_nombre[]">
+          <option value="">Seleccione</option>
+          {% for opcion in ['whatsapp', 'telegram', 'X', 'instagram', 'tiktok', 'otra'] %}
+            <option value="{{ opcion }}">{{ opcion }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" name="contact_identificador[]" placeholder="Identificador"/>
+        <div class="other-wrapper hidden">
+          <input type="text" name="contact_otro_nombre" placeholder="Especifica la red"/>
+        </div>
+      </div>
+    </template>
+
+    <button type="button" id="add-contact">Agregar otro contacto</button>
+
+
+    <div class="section-title">Mascota</div>
+
+    <!-- name=pet-type (backend) con tu id existente -->
+    <select name="pet-type" id="animal-type">
+      <option value="">Seleccione</option>
+      <option value="Gato"  {% if request.form.get('pet-type', request.form.get('animal-type')) == 'Gato' %}selected{% endif %}>Gato</option>
+      <option value="Perro" {% if request.form.get('pet-type', request.form.get('animal-type')) == 'Perro' %}selected{% endif %}>Perro</option>
+    </select>
+
+    <input type="number" name="amount" id="animal-quantity" placeholder="Cantidad"
+           value="{{ request.form.get('amount', request.form.get('animal-quantity','')) }}"/>
+
+    <input type="number" name="age" id="animal-age" placeholder="Edad"
+           value="{{ request.form.get('age', request.form.get('animal-age','')) }}"/>
+
+    <select name="age-type" id="age-type">
+      <option value="">Seleccione</option>
+      <option value="Meses" {% if request.form.get('age-type') == 'Meses' %}selected{% endif %}>Meses</option>
+      <option value="Años"  {% if request.form.get('age-type') == 'Años'  %}selected{% endif %}>Años</option>
+    </select>
+
+    <input type="date" name="delibery-date" id="delibery-date"
+           value="{{ request.form.get('delibery-date','') }}"/>
+
+    <!-- name=description (backend) con id -->
+    <textarea name="description" id="animal-description" placeholder="Descripción">{{ request.form.get('description', request.form.get('animal-description','')) }}</textarea>
+
+    <!-- Fotos -->
+    <div id="photo-container">
+      <!-- name=photos[] (backend) con id; multiple se mantiene -->
+      <input type="file" name="photos[]" id="animal-picture" multiple/>
+    </div>
+    <button type="button" id="add-photo">Agregar foto</button>
+
+    <div id="val-box" hidden>
+      <p id="val-msg"></p>
+      <ul id="val-list"></ul>
+    </div>
+
+    <!--AJAX/modales -->
+    <button type="button" id="send-button">Enviar Aviso</button>
+  </form>
+
+  <!-- Modals -->
+  <div id="confirm-modal" hidden>
+    <p>¿Confirmar envío?</p>
+    <button id="confirm-yes">Sí</button>
+    <button id="confirm-no">No</button>
+  </div>
+
+  <div id="sent-box" hidden>
+    <p>Aviso enviado exitosamente!</p>
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/select.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validationform.js') }}"></script>
+<script>
+  // Inserta una fila de contacto por defecto al cargar, para no dejar el contenedor vacío
+  document.addEventListener('DOMContentLoaded', () => {
+    const tpl = document.getElementById('tpl-contact');
+    const container = document.getElementById('contact-container');
+    if (tpl && container && !container.children.length) {
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      container.appendChild(node);
+      // Rellenar con lo que venga del request.form (si se devolvió con errores)
+      const selVal = "{{ (request.form.getlist('contact_nombre[]') or [''])|first }}";
+      const idVal  = "{{ (request.form.getlist('contact_identificador[]') or [''])|first }}";
+      const sel = node.querySelector('select[name="contact_nombre[]"]');
+      const inp = node.querySelector('input[name="contact_identificador[]"]');
+      if (sel && selVal) sel.value = selVal;
+      if (inp && idVal)  inp.value = idVal;
+    }
+
+    // Si botón #send-button para abrir modal, submit real:
+    const sendBtn = document.getElementById('send-button');
+    const modal   = document.getElementById('confirm-modal');
+    const yesBtn  = document.getElementById('confirm-yes');
+    const noBtn   = document.getElementById('confirm-no');
+    const form    = document.getElementById('form-anuncio');
+
+    if (sendBtn && modal && yesBtn && noBtn && form) {
+      sendBtn.addEventListener('click', () => {
+        modal.hidden = false;
+      });
+      noBtn.addEventListener('click', () => {
+        modal.hidden = true;
+      });
+      yesBtn.addEventListener('click', () => {
+        modal.hidden = true;
+        form.requestSubmit(); // validationform.js
+      });
+    }
+  });
+</script>
+{% endblock %}

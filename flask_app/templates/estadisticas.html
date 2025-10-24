@@ -1,0 +1,36 @@
+
+{% extends 'base.html' %}
+{% block title %}Estadísticas{% endblock %}
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/smth.css') }}">
+{% endblock %}
+{% block content %}
+<h1>Estadísticas</h1>
+
+<div class="charts" id="charts">
+    <div class="chart-card">
+        <h2 class="chart-title">Avisos por día (últimos 30 días)</h2>
+        <div id="chart-dia" style="height: 360px;"></div>
+    </div>
+
+    <div class="chart-card">
+        <h2 class="chart-title">Total por tipo</h2>
+        <div id="chart-tipo" style="height: 360px;"></div>
+    </div>
+
+    <div class="chart-card">
+        <h2 class="chart-title">Por mes (gatos vs perros)</h2>
+        <div id="chart-mes" style="height: 360px;"></div>
+    </div>
+</div>
+
+<p style="margin-top:16px;">
+<a href="{{ url_for('portada') }}">← Volver a Portada</a>
+</p>
+{% endblock %}
+{% block javascript %}
+{{ super() }}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="{{ url_for('static', filename='js/avisos.js') }}"></script>
+{% endblock %}
