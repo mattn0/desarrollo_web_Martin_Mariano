@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Listado de Avisos{% endblock %}
+
+{% block css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/smth.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Listado de Avisos</h1>
+
+<div id="avisos-table">
+  {# Render inicial completo (también sirve para no-js); AJAX reutiliza el parcial #}
+  {% include "_avisos_table.html" %}
+</div>
+
+<div class="pagination">
+  {% if page > 1 %}
+    <a class="btn-page" data-page="{{ page-1 }}" href="{{ url_for('avisos', page=page-1) }}">Anterior</a>
+  {% endif %}
+  Página {{ page }} de {{ total_pages }}
+  {% if has_next %}
+    <a class="btn-page" data-page="{{ page+1 }}" href="{{ url_for('avisos', page=page+1) }}">Siguiente</a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/avisos.js') }}"></script>
+{% endblock %}
