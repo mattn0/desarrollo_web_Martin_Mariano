@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <title>Evaluación de avisos de adopción</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Evaluación de avisos de adopción</h1>
+    </header>
+
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Fecha publicación</th>
+            <th scope="col">Sector</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Comuna</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="aviso : ${avisos}">
+            <td th:text="${aviso.id}"></td>
+            <td th:text="${#temporals.format(aviso.fechaIngreso, 'yyyy-MM-dd')}"></td>
+            <td th:text="${aviso.sector}"></td>
+            <td th:text="${aviso.cantidad}"></td>
+            <td th:text="${aviso.tipo}"></td>
+            <td>
+              <span th:text="${aviso.edad}"></span>
+              <span th:text="${aviso.unidadMedida == 'm' ? 'meses' : 'años'}"></span>
+            </td>
+            <td th:text="${aviso.comuna.nombre}"></td>
+
+            <!-- mostrar promedio o "-" -->
+            <td
+              th:attr="id=|nota-${aviso.id}|"
+              th:text="${aviso.promedioNotas == null} ? '-' : ${#numbers.formatDecimal(aviso.promedioNotas, 1, 1)}"
+            ></td>
+
+            <td>
+              <button
+                type="button"
+                th:attr="onclick=|evaluarAviso(${aviso.id})|"
+              >
+                Evaluar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      function evaluarAviso(avisoId) {
+        const input = window.prompt("Ingrese una nota entre 1 y 7");
+        if (input === null) {
+          return; // Canceló
+        }
+
+        const nota = parseInt(input.trim(), 10);
+        // aca puede que me este equivocando ya que quizas deberia dejar solo esta validacion y no la de controller (en el aux pareciera que solo usa la de js)
+        if (Number.isNaN(nota) || nota < 1 || nota > 7) {
+          window.alert("La nota debe ser un número entero entre 1 y 7.");
+          return;
+        }
+
+        fetch("/avisos/" + avisoId + "/nota", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ nota: nota })
+        })
+          .then(function (res) {
+            if (!res.ok) {
+              return res.json().then(function (e) {
+                throw new Error(e.mensaje || "Error al guardar la nota.");
+              });
+            }
+            return res.json();
+          })
+          .then(function (data) {
+            var celda = document.getElementById("nota-" + avisoId);
+            if (celda && data && typeof data.promedio === "number") {
+              celda.textContent = data.promedio.toFixed(1);
+            }
+          })
+          .catch(function (err) {
+            console.error(err);
+            window.alert(err.message);
+          });
+      }
+    </script>
+  </body>
+</html>
